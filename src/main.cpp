@@ -25,10 +25,10 @@ double deltaTime;
 
 void setup()
 {
-	Serial.begin(9600);
+	Serial.begin(115200);
 
-	//batteryChecker = new BatteryChecker();
-	//receiver = new Receiver();
+	batteryChecker = new BatteryChecker();
+	receiver = new Receiver();
 	sensors = new Sensors();
 
 	rollPid = new PID(PID_ROLL_P, PID_ROLL_I, PID_ROLL_D);
@@ -47,8 +47,14 @@ void loop()
 	{
 		lastTime = currentTime;
 
-		//batteryChecker->update(currentTime);
-		//receiver->update(currentTime);
+		batteryChecker->update(currentTime);
+		receiver->update(currentTime);
 		sensors->update(deltaTime);
+/*
+		float roll = rollPid->process(receiver->getRoll(), sensors->rollAngle(), deltaTime);
+		float pitch = pitchPid->process(receiver->getPitch(), sensors->pitchAngle(), deltaTime);
+		float yaw = yawPidPid->process(receiver->getYaw(), sensors->yawAngle(), deltaTime);
+*/
+
 	}
 }

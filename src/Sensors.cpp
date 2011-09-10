@@ -41,7 +41,7 @@ void Sensors::update(float deltaTime)
 	_pitchAngle = _pitchKalman->update(deg2rad(_gyroscop->getPitch()), _accelerometer->getAngleY(), deltaTime);
 	_yawAngle   = _rungeKuta->update(deg2rad(_gyroscop->getYaw()) * deltaTime);
 
-
+#ifdef DEBUG_MODE
 	Serial.print("ACCELEROMTER_X:");
 	Serial.print(_accelerometer->getAngleX());
 	Serial.print(" ACCELEROMTER_Y:");
@@ -52,14 +52,14 @@ void Sensors::update(float deltaTime)
 	Serial.print(_gyroscop->getPitch());
 	Serial.print(" GYRO_Yaw:");
 	Serial.print(_gyroscop->getYaw());
-	Serial.print(" KRoll:");
+	Serial.print(" SENSORS_Roll:");
 	Serial.print(_rollAngle);
-	Serial.print(" KPitch:");
+	Serial.print(" SENSORS_Pitch:");
 	Serial.print(_pitchAngle);
-	Serial.print(" RYaw:");
+	Serial.print(" SENSORS_Yaw:");
 	Serial.print(_yawAngle);
 	Serial.print("\n");
-
+#endif
 }
 
 void Sensors::switchToGyroscop()

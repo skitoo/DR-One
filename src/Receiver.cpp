@@ -40,7 +40,6 @@ void Receiver::update(unsigned long currentTime)
 		updateYaw();
 
 #ifdef DEBUG_MODE
-		/*
 		Serial.print("RECEIVER_THROTTLE:");
 		Serial.print(_throttle);
 		Serial.print(" RECEIVER_PITCH:");
@@ -49,7 +48,7 @@ void Receiver::update(unsigned long currentTime)
 		Serial.print(_roll);
 		Serial.print(" RECEIVER_YAW:");
 		Serial.print(_yaw);
-		Serial.print("\n");*/
+		Serial.print("\n");
 #endif
 	}
 }

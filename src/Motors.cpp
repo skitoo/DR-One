@@ -29,26 +29,27 @@ void Motors::update(unsigned long currentTime)
 
 void Motors::setTopMotorSpeed(int speed)
 {
-	_topMotorSpeed = speed;
+	_topMotorSpeed = map(speed, 0, 100, MIN_SPEED_MOTOR, MAX_SPEED_MOTOR);
 }
 
 void Motors::setRearMotorSpeed(int speed)
 {
-	_rearMotorSpeed = speed;
+	_rearMotorSpeed = map(speed, 0, 100, MIN_SPEED_MOTOR, MAX_SPEED_MOTOR);
 }
 
 void Motors::setLeftMotorSpeed(int speed)
 {
-	_leftMotorSpeed = speed;
+	_leftMotorSpeed = map(speed, 0, 100, MIN_SPEED_MOTOR, MAX_SPEED_MOTOR);
 }
 
 void Motors::setRightMotorSpeed(int speed)
 {
-	_rightMotorSpeed = speed;
+	_rightMotorSpeed = map(speed, 0, 100, MIN_SPEED_MOTOR, MAX_SPEED_MOTOR);
 }
 
 void Motors::setGlobalSpeed(int speed)
 {
+	speed = map(speed, 0, 100, MIN_SPEED_MOTOR, MAX_SPEED_MOTOR);
 	_topMotorSpeed = speed;
 	_rearMotorSpeed = speed;
 	_leftMotorSpeed = speed;
