@@ -27,6 +27,9 @@ Sensors::Sensors()
 
 	switchToGyroscop();
 	_gyroscop = new Gyroscop();
+
+	_yawVelocity = 0;
+	_previousYawAngle = 0;
 }
 
 void Sensors::update(float deltaTime)
@@ -40,6 +43,9 @@ void Sensors::update(float deltaTime)
 	_rollAngle  = _rollKalman->update(deg2rad(_gyroscop->getRoll()), _accelerometer->getAngleX(), deltaTime);
 	_pitchAngle = _pitchKalman->update(deg2rad(_gyroscop->getPitch()), _accelerometer->getAngleY(), deltaTime);
 	_yawAngle   = _rungeKuta->update(deg2rad(_gyroscop->getYaw()) * deltaTime);
+
+	_yawVelocity = (_yawAngle - _previousYawAngle) / deltaTime;
+	_previousYawAngle = _yawAngle;
 
 #ifdef DEBUG_MODE
 	Serial.print("ACCELEROMTER_X:");
@@ -76,15 +82,25 @@ void Sensors::switchToAccelerometer()
 
 double Sensors::rollAngle()
 {
-	return _rollAngle;
+	return rad2deg(_rollAngle);
 }
 
 double Sensors::pitchAngle()
 {
-	return _pitchAngle;
+	return rad2deg(_pitchAngle);
 }
 
 double Sensors::yawAngle()
 {
-	return _yawAngle;
+	return rad2deg(_yawAngle);
+}
+
+double Sensors::yawVelocity()
+{
+	return rad2deg(_yawVelocity);
+}
+
+Gyroscop* Sensors::getGyro()
+{
+	return _gyroscop;
 }

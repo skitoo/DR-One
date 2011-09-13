@@ -7,27 +7,43 @@
 
 #include "PID.h"
 
-PID::PID(float p, float i, float d)
+PID::PID(float p, float i, float d, float minIntegratedError, float maxIntegratedError)
 {
-	P = p;
-	I = i;
-	D = d;
-	integratedError = 0;
-	lastPosition = 0;
+	this->p = p;
+	this->i = i;
+	this->d = d;
+	this->minIntegratedError = minIntegratedError;
+	this->maxIntegratedError = maxIntegratedError;
+	error = 0.0;
+	integratedError = 0.0;
+	previousError = 0.0;
+	pValue = 0.0;
+	iValue = 0.0;
+	dValue = 0.0;
+	derivative = 0.0;
 }
 
 
-float PID::process(float targetPosition, float currentPosition, int deltaTime)
+float PID::process(float targetPosition, float currentPosition, float deltaTime)
 {
-	float error = targetPosition - currentPosition;
-	integratedError += error * (deltaTime / 1000);
-	integratedError = constrain(integratedError, -WINDUPGUARD, WINDUPGUARD);
-	float dTerm = D * (currentPosition - lastPosition) / (deltaTime / 1000);
-	lastPosition = currentPosition;
-	return P * error + I * integratedError - dTerm;
+	// P value
+	error = targetPosition - currentPosition;
+	pValue = error * p;
+
+	// I value
+	integratedError += error * deltaTime;
+	integratedError = constrain(integratedError, minIntegratedError, maxIntegratedError);
+	iValue = integratedError * i;
+
+	// D value
+	derivative = (error - previousError) / deltaTime;
+	previousError = error;
+	dValue = derivative * d;
+
+	return pValue + iValue + dValue;
 }
 
 void PID::reset()
 {
-	integratedError = 0;
+	integratedError = 0.0;
 }

@@ -23,6 +23,10 @@
 #define RECEIVER_ROLL_PIN     6
 #define RECEIVER_YAW_PIN	  7
 
+#define MIN_RECEIVER_ANGLE -20
+#define MAX_RECEIVER_ANGLE 20
+#define MAX_ANGULAR_VELOCITY 20
+
 
 // MOTORS ------------------------ //
 
@@ -33,6 +37,9 @@
 
 #define MIN_SPEED_MOTOR 124
 #define MAX_SPEED_MOTOR 250
+
+//#define X_MODE
+#define PLUS_MODE
 
 
 // SENSORS ----------------------- //
@@ -67,20 +74,22 @@
 
 // PID ---------------------------- //
 
+
 #define PID_ROLL_P 1.5
 #define PID_ROLL_I 0.0
-#define PID_ROLL_D 0.05
+#define PID_ROLL_D 0.001
 
 #define PID_PITCH_P 1.5
 #define PID_PITCH_I 0.0
-#define PID_PITCH_D 0.05
+#define PID_PITCH_D 0.001
 
 #define PID_YAW_P 3.0
 #define PID_YAW_I 0.05
 #define PID_YAW_D 0.0
 
 
-#define WINDUPGUARD 1000
+#define MIN_INTEGRATED_ERROR -0.375
+#define MAX_INTEGRATED_ERROR 0.375
 
 
 

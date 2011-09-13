@@ -46,6 +46,9 @@ public:
 	int getPitch();
 	int getRoll();
 	int getYaw();
+	float getRollAngle();
+	float getPitchAngle();
+	float getYawAngularVelocity();
 };
 
 #endif /* RECEIVER_H_ */

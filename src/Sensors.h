@@ -25,7 +25,7 @@ private:
 	RungeKuta *_rungeKuta;
 	double _rollAngle;
 	double _pitchAngle;
-	double _yawAngle;
+	double _yawAngle, _previousYawAngle, _yawVelocity;
 	void switchToAccelerometer();
 	void switchToGyroscop();
 public:
@@ -34,6 +34,8 @@ public:
 	double rollAngle();
 	double pitchAngle();
 	double yawAngle();
+	double yawVelocity();
+	Gyroscop* getGyro();
 };
 
 #endif /* SENSORS_H_ */

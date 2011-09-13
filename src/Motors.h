@@ -14,26 +14,22 @@
 class Motors
 {
 private:
-	int _topMotorSpeed;
-	int _rearMotorSpeed;
-	int _leftMotorSpeed;
-	int _rightMotorSpeed;
-
-	int _rollCommand;
-	int _pitchCommand;
-	int _yawCommand;
-	int _lastTime;
+	int frontMotorSpeed;
+	int rearMotorSpeed;
+	int leftMotorSpeed;
+	int rightMotorSpeed;
 public:
 	Motors();
-	void update(unsigned long currentTime);
-	void setTopMotorSpeed(int speed);
+	void update();
+	void setFrontMotorSpeed(int speed);
 	void setRearMotorSpeed(int speed);
 	void setLeftMotorSpeed(int speed);
 	void setRightMotorSpeed(int speed);
 	void setGlobalSpeed(int speed);
+	/*
 	void setRollCommand(int command);
 	void setPitchCommand(int command);
-	void setYawCommand(int command);
+	void setYawCommand(int command);*/
 
 	void stopAllMotors();
 };

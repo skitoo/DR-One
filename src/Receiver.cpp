@@ -72,29 +72,39 @@ void Receiver::updatePitch()
 	else
 		_lastGoodPitch = _pValue;
 
-	_pitch = constrain((_pValue - _initPitch) * 0.167, -100, 100);
+	_pitch = constrain((_pValue - _initPitch) * 0.167 * 2 - 1, -100, 100);
 }
 
 void Receiver::updateRoll()
 {
-	_rValue = pulseIn(RECEIVER_ROLL_PIN, HIGH, 20000);
+	_rValue = pulseIn(RECEIVER_ROLL_PIN, HIGH, 25000);//20000
 	if (_rValue == 0)
 		_rValue = _lastGoodRoll;
 	else
 		_lastGoodRoll = _rValue;
 
-	_roll = constrain((_rValue - _initRoll) * 0.167, -100, 100);
+	_roll = (_rValue - _initRoll) * 0.167;
+	if (_roll < 0)
+	{
+		_roll *= 1.5151;
+	}
+	else
+	{
+		_roll *= 1.7543;
+	}
+	//_roll++;
+	_roll = constrain(_roll, -100, 100);
 }
 
 void Receiver::updateYaw()
 {
-	_yValue = pulseIn(RECEIVER_YAW_PIN, HIGH, 20000);
+	_yValue = pulseIn(RECEIVER_YAW_PIN, HIGH, 25000);//20000
 	if (_yValue == 0)
 		_yValue = _lastGoodYaw;
 	else
 		_lastGoodYaw = _yValue;
 
-	_yaw = constrain((_yValue - _initYaw) * 0.167, -100, 100);
+	_yaw = constrain((_yValue - _initYaw) * 0.167 * 1.66666, -100, 100);
 }
 
 int Receiver::getThrottle()
@@ -115,4 +125,19 @@ int Receiver::getRoll()
 int Receiver::getYaw()
 {
 	return _yaw;
+}
+
+float Receiver::getRollAngle()
+{
+	return map(_roll, 0, 100, MIN_RECEIVER_ANGLE, MAX_RECEIVER_ANGLE);
+}
+
+float Receiver::getPitchAngle()
+{
+	return map(_pitch, 0, 100, MIN_RECEIVER_ANGLE, MAX_RECEIVER_ANGLE);
+}
+
+float Receiver::getYawAngularVelocity()
+{
+	return map(_yaw, 0, 100, -MAX_ANGULAR_VELOCITY, MAX_ANGULAR_VELOCITY);
 }

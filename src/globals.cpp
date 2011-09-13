@@ -16,3 +16,4 @@ double deg2rad(double deg)
 {
 	return deg * 0.0174532925;
 }
+
