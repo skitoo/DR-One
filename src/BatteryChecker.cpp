@@ -7,7 +7,7 @@
 
 #include "BatteryChecker.h"
 
-const float VOLTAGE_FACTOR  = 5.0 / 1023;
+const float VOLTAGE_FACTOR = 5.0 / 1023;
 const float BRIDGE_FACTOR = 2.0 / 3;
 
 BatteryChecker::BatteryChecker()
@@ -17,28 +17,39 @@ BatteryChecker::BatteryChecker()
 	_lastTime = 0;
 }
 
-void BatteryChecker::update(unsigned long currentTime)
+void BatteryChecker::update(unsigned long currentTime, bool armed)
 {
-	if (currentTime >= _lastTime + BATTERY_CHECK_LOOP_TIME)
+	if (armed)
 	{
-		_lastTime = currentTime;
-		int batteryMonitorValue = analogRead(A0);
-		float currentVoltage = (VOLTAGE_FACTOR * batteryMonitorValue) / BRIDGE_FACTOR ;
-
-		if (currentVoltage > BATTERY_HALF_EMPTY_VALUE)
+		if (currentTime >= _lastTime + BATTERY_CHECK_LOOP_TIME)
 		{
-			digitalWrite(BATTERY_MONITOR_EMPTY_LED_PIN, LOW);
-			digitalWrite(BATTERY_MONITOR_HALF_EMPTY_LED_PIN, LOW);
+			_lastTime = currentTime;
+			int batteryMonitorValue = analogRead(A0);
+			float currentVoltage = (VOLTAGE_FACTOR * batteryMonitorValue) / BRIDGE_FACTOR;
+#ifdef DEBUG_MODE
+			Serial.print("VOLTAGE:");
+			Serial.println(currentVoltage);
+#endif
+			if (currentVoltage > BATTERY_HALF_EMPTY_VALUE)
+			{
+				digitalWrite(BATTERY_MONITOR_EMPTY_LED_PIN, LOW);
+				digitalWrite(BATTERY_MONITOR_HALF_EMPTY_LED_PIN, LOW);
+			}
+			else if (currentVoltage > BATTERY_EMPTY_VALUE)
+			{
+				digitalWrite(BATTERY_MONITOR_EMPTY_LED_PIN, LOW);
+				digitalWrite(BATTERY_MONITOR_HALF_EMPTY_LED_PIN, HIGH);
+			}
+			else
+			{
+				digitalWrite(BATTERY_MONITOR_EMPTY_LED_PIN, HIGH);
+				digitalWrite(BATTERY_MONITOR_HALF_EMPTY_LED_PIN, LOW);
+			}
 		}
-		else if (currentVoltage > BATTERY_EMPTY_VALUE)
-		{
-			digitalWrite(BATTERY_MONITOR_EMPTY_LED_PIN, LOW);
-			digitalWrite(BATTERY_MONITOR_HALF_EMPTY_LED_PIN, HIGH);
-		}
-		else
-		{
-			digitalWrite(BATTERY_MONITOR_EMPTY_LED_PIN, HIGH);
-			digitalWrite(BATTERY_MONITOR_HALF_EMPTY_LED_PIN, LOW);
-		}
+	}
+	else
+	{
+		digitalWrite(BATTERY_MONITOR_EMPTY_LED_PIN, HIGH);
+		digitalWrite(BATTERY_MONITOR_HALF_EMPTY_LED_PIN, HIGH);
 	}
 }

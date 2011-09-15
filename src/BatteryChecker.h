@@ -17,7 +17,7 @@ private:
 	unsigned long _lastTime;
 public:
 	BatteryChecker();
-	void update(unsigned long currentTime);
+	void update(unsigned long currentTime, bool armed);
 };
 
 #endif /* BATTERYCHECKER_H_ */
