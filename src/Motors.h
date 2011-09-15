@@ -18,6 +18,7 @@ private:
 	int rearMotorSpeed;
 	int leftMotorSpeed;
 	int rightMotorSpeed;
+	int previousFront, previousRear, previousLeft, previousRight;
 public:
 	Motors();
 	void update();

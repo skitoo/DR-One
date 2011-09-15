@@ -9,11 +9,11 @@
 
 PID::PID(float p, float i, float d, float minIntegratedError, float maxIntegratedError)
 {
-	this->p = p;
-	this->i = i;
-	this->d = d;
-	this->minIntegratedError = minIntegratedError;
-	this->maxIntegratedError = maxIntegratedError;
+	_p = p;
+	_i = i;
+	_d = d;
+	_minIntegratedError = minIntegratedError;
+	_maxIntegratedError = maxIntegratedError;
 	error = 0.0;
 	integratedError = 0.0;
 	previousError = 0.0;
@@ -28,17 +28,17 @@ float PID::process(float targetPosition, float currentPosition, float deltaTime)
 {
 	// P value
 	error = targetPosition - currentPosition;
-	pValue = error * p;
+	pValue = error * _p;
 
 	// I value
 	integratedError += error * deltaTime;
-	integratedError = constrain(integratedError, minIntegratedError, maxIntegratedError);
-	iValue = integratedError * i;
+	integratedError = constrain(integratedError, _minIntegratedError, _maxIntegratedError);
+	iValue = integratedError * _i;
 
 	// D value
 	derivative = (error - previousError) / deltaTime;
 	previousError = error;
-	dValue = derivative * d;
+	dValue = derivative * _d;
 
 	return pValue + iValue + dValue;
 }

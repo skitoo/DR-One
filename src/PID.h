@@ -14,11 +14,11 @@
 class PID
 {
 private:
-	float p, i, d;
+	float _p, _i, _d;
 	float pValue, iValue, dValue;
 	float error, integratedError, previousError;
 	float derivative;
-	float minIntegratedError, maxIntegratedError;
+	float _minIntegratedError, _maxIntegratedError;
 public:
 	PID(float p, float i, float d, float minIntegratedError, float maxIntegratedError);
 	float process(float targetPosition, float currentPosition, float deltaTime);

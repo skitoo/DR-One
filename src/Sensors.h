@@ -26,6 +26,7 @@ private:
 	double _rollAngle;
 	double _pitchAngle;
 	double _yawAngle, _previousYawAngle, _yawVelocity;
+	double _previousRoll, _previousPitch, _previousYaw;
 	void switchToAccelerometer();
 	void switchToGyroscop();
 public:

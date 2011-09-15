@@ -26,6 +26,11 @@ Receiver::Receiver()
 	_lastGoodRoll = _initRoll;
 	_lastGoodThrottle = _initThrottle;
 	_lastGoodYaw = _initYaw;
+
+	_lastPitch = 0;
+	_lastRoll = 0;
+	_lastYaw = 0;
+	_lastThrottle = 0;
 }
 
 void Receiver::update(unsigned long currentTime)
@@ -35,8 +40,8 @@ void Receiver::update(unsigned long currentTime)
 		_lastTime = currentTime;
 
 		updateThrottle();
-		updatePitch();
 		updateRoll();
+		updatePitch();
 		updateYaw();
 
 #ifdef DEBUG_MODE
@@ -62,6 +67,8 @@ void Receiver::updateThrottle()
 		_lastGoodThrottle = _tValue;
 
 	_throttle = constrain((_tValue - _initThrottle) * 0.167, 0, 100);
+	_throttle = filterSmooth(_throttle, _lastThrottle, 0.8);
+	_lastThrottle = _throttle;
 }
 
 void Receiver::updatePitch()
@@ -73,6 +80,8 @@ void Receiver::updatePitch()
 		_lastGoodPitch = _pValue;
 
 	_pitch = constrain((_pValue - _initPitch) * 0.167 * 2 - 1, -100, 100);
+	_pitch = filterSmooth(_pitch, _lastPitch, 0.8);
+	_lastPitch = _pitch;
 }
 
 void Receiver::updateRoll()
@@ -94,6 +103,8 @@ void Receiver::updateRoll()
 	}
 	//_roll++;
 	_roll = constrain(_roll, -100, 100);
+	_roll = filterSmooth(_roll, _lastRoll, 0.8);
+	_lastRoll = _roll;
 }
 
 void Receiver::updateYaw()
@@ -105,6 +116,8 @@ void Receiver::updateYaw()
 		_lastGoodYaw = _yValue;
 
 	_yaw = constrain((_yValue - _initYaw) * 0.167 * 1.66666, -100, 100);
+	_yaw = filterSmooth(_yaw, _lastYaw, 0.8);
+	_lastYaw = _yaw;
 }
 
 int Receiver::getThrottle()
@@ -129,15 +142,15 @@ int Receiver::getYaw()
 
 float Receiver::getRollAngle()
 {
-	return map(_roll, 0, 100, MIN_RECEIVER_ANGLE, MAX_RECEIVER_ANGLE);
+	return map(_roll, -100, 100, MIN_RECEIVER_ANGLE, MAX_RECEIVER_ANGLE);
 }
 
 float Receiver::getPitchAngle()
 {
-	return map(_pitch, 0, 100, MIN_RECEIVER_ANGLE, MAX_RECEIVER_ANGLE);
+	return map(_pitch, -100, 100, MIN_RECEIVER_ANGLE, MAX_RECEIVER_ANGLE);
 }
 
 float Receiver::getYawAngularVelocity()
 {
-	return map(_yaw, 0, 100, -MAX_ANGULAR_VELOCITY, MAX_ANGULAR_VELOCITY);
+	return map(_yaw, -100, 100, -MAX_ANGULAR_VELOCITY, MAX_ANGULAR_VELOCITY);
 }

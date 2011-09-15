@@ -16,16 +16,20 @@ PID *pitchPid;
 PID *yawPid;
 
 unsigned long currentTime;
-unsigned long lastTime;
-double deltaTime;
+unsigned long lastTime, lastTimeReceiver;
+double deltaTime, deltaTimeReceiver;
 
 double cmdRoll;
 double cmdPitch;
 double cmdYaw;
+bool armed;
+
 
 void setup()
 {
+#ifdef DEBUG_MODE
 	Serial.begin(115200);
+#endif
 
 	batteryChecker = new BatteryChecker();
 	receiver = new Receiver();
@@ -37,19 +41,40 @@ void setup()
 	yawPid = new PID(PID_YAW_P, PID_YAW_I, PID_YAW_D, MIN_INTEGRATED_ERROR, MAX_INTEGRATED_ERROR);
 
 	lastTime = millis();
+	lastTimeReceiver = millis();
+	armed = false;
 }
 
 void loop()
 {
 	currentTime = millis();
 	deltaTime = (currentTime - lastTime) * 0.001;
+	deltaTimeReceiver = (currentTime - lastTimeReceiver) * 0.001;
 
-	if (deltaTime >= 0.01)
+	if (!armed)
+	{
+		batteryChecker->update(currentTime, armed);
+		motors->stopAllMotors();
+		motors->update();
+		receiver->update(currentTime);
+		if (receiver->getThrottle() == 0)
+		{
+			armed = true;
+			delay(2000);
+			return;
+		}
+	}
+
+	batteryChecker->update(currentTime, armed);
+
+	if (deltaTimeReceiver >= 0.02)
+	{
+		lastTimeReceiver = currentTime;
+		receiver->update(currentTime);
+	}
+	if (deltaTime >= 0.1)
 	{
 		lastTime = currentTime;
-
-		batteryChecker->update(currentTime);
-		receiver->update(currentTime);
 		sensors->update(deltaTime);
 
 		cmdRoll = rollPid->process(receiver->getRollAngle(), sensors->rollAngle(), deltaTime);
@@ -61,12 +86,16 @@ void loop()
 		motors->setRearMotorSpeed(receiver->getThrottle() + cmdPitch - cmdYaw);
 		motors->setLeftMotorSpeed(receiver->getThrottle() - cmdRoll + cmdYaw);
 		motors->setRightMotorSpeed(receiver->getThrottle() + cmdRoll + cmdYaw);
-#elif X_MODE
-		motors->setTopMotorSpeed(receiver->getThrottle() - cmdPitch + cmdRoll - cmdYaw);
+#elif defined X_MODE
+		motors->setFrontMotorSpeed(receiver->getThrottle() - cmdPitch + cmdRoll - cmdYaw);
 		motors->setRearMotorSpeed(receiver->getThrottle() + cmdPitch - cmdRoll - cmdYaw);
 		motors->setLeftMotorSpeed(receiver->getThrottle() + cmdPitch + cmdRoll + cmdYaw);
 		motors->setRightMotorSpeed(receiver->getThrottle() - cmdPitch - cmdRoll + cmdYaw);
 #endif
+		if (receiver->getThrottle() == 0)
+		{
+			motors->stopAllMotors();
+		}
 		motors->update();
 
 #ifdef DEBUG_MODE

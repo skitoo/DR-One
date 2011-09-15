@@ -17,6 +17,7 @@ private:
 	int _pitch;
 	int _roll;
 	int _yaw;
+	int _lastPitch, _lastRoll, _lastYaw, _lastThrottle;
 
 	long _initThrottle;
 	long _initPitch;

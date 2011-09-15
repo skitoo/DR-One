@@ -29,17 +29,16 @@
 
 
 // MOTORS ------------------------ //
+#define MOTOR_FRONT_PIN 10
+#define MOTOR_REAR_PIN 11
+#define MOTOR_LEFT_PIN 9
+#define MOTOR_RIGHT_PIN 3
 
-#define MOTOR_FRONT_PIN 3
-#define MOTOR_REAR_PIN 9
-#define MOTOR_LEFT_PIN 10
-#define MOTOR_RIGHT_PIN 11
-
-#define MIN_SPEED_MOTOR 124
+#define MIN_SPEED_MOTOR 125
 #define MAX_SPEED_MOTOR 250
 
-//#define X_MODE
-#define PLUS_MODE
+#define X_MODE
+//#define PLUS_MODE
 
 
 // SENSORS ----------------------- //
@@ -75,16 +74,16 @@
 // PID ---------------------------- //
 
 
-#define PID_ROLL_P 1.5
+#define PID_ROLL_P 1.1
 #define PID_ROLL_I 0.0
 #define PID_ROLL_D 0.001
 
-#define PID_PITCH_P 1.5
+#define PID_PITCH_P 1.1
 #define PID_PITCH_I 0.0
 #define PID_PITCH_D 0.001
 
-#define PID_YAW_P 3.0
-#define PID_YAW_I 0.05
+#define PID_YAW_P 1.5
+#define PID_YAW_I 0.005
 #define PID_YAW_D 0.0
 
 
@@ -98,6 +97,8 @@
 double rad2deg(double rad);
 
 double deg2rad(double deg);
+
+float filterSmooth(float currentData, float previousData, float factor);
 
 
 #endif /* CONSTANTS_H_ */

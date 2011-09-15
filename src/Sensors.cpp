@@ -30,6 +30,10 @@ Sensors::Sensors()
 
 	_yawVelocity = 0;
 	_previousYawAngle = 0;
+
+	_previousRoll = 0;
+	_previousPitch = 0;
+	_previousYaw = 0;
 }
 
 void Sensors::update(float deltaTime)
@@ -43,6 +47,13 @@ void Sensors::update(float deltaTime)
 	_rollAngle  = _rollKalman->update(deg2rad(_gyroscop->getRoll()), _accelerometer->getAngleX(), deltaTime);
 	_pitchAngle = _pitchKalman->update(deg2rad(_gyroscop->getPitch()), _accelerometer->getAngleY(), deltaTime);
 	_yawAngle   = _rungeKuta->update(deg2rad(_gyroscop->getYaw()) * deltaTime);
+
+	_rollAngle = filterSmooth(_rollAngle, _previousRoll, 0.5);
+	_previousRoll = _rollAngle;
+	_pitchAngle = filterSmooth(_pitchAngle, _previousPitch, 0.5);
+	_previousPitch = _pitchAngle;
+	_yawAngle = filterSmooth(_yawAngle, _previousYaw, 0.5);
+	_previousYaw = _yawAngle;
 
 	_yawVelocity = (_yawAngle - _previousYawAngle) / deltaTime;
 	_previousYawAngle = _yawAngle;
